@@ -1,4 +1,4 @@
-package main.java.dataset;
+package dataset.count;
 
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -9,6 +9,10 @@ import org.apache.flink.api.java.utils.ParameterTool;
 
 public class WordCount
 {
+    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
+    private static final String INPUT = DIR + "word/wc.txt";
+    private static final String OUTPUT = DIR + "output/wcResult.csv";
+
     public static void main(String[] args) throws Exception {
         // Set up the execution environment
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
@@ -19,8 +23,7 @@ public class WordCount
         env.getConfig().setGlobalJobParameters(params);
 
         // Read the text file from given input path
-        String inputPath = "/Users/yjkim-studio/src/flink/hands-on/data/wordCount/wc.txt";
-        DataSet<String> text = env.readTextFile(inputPath);
+        DataSet<String> text = env.readTextFile(INPUT);
 
         // Filter all the names starting with N
         DataSet<String> filtered = text.filter(new FilterFunction<String>() {
@@ -39,14 +42,13 @@ public class WordCount
         // DataSet<Tuple2<String, Integer>> counts = counts1.sum(1);
 
         // save the result
-        String outputPath = "/Users/yjkim-studio/src/flink/hands-on/data/output/wcResult.csv";
-        counts.writeAsCsv(outputPath, "\n", " ");
+        counts.writeAsCsv(OUTPUT, "\n", " ");
 
         // execute program
         env.execute("WordCount Example");
     }
 
-    public static final class Tokenizer implements MapFunction<String, Tuple2<String, Integer>> {
+    private static final class Tokenizer implements MapFunction<String, Tuple2<String, Integer>> {
         public Tuple2<String, Integer> map(String value) {
             return new Tuple2<String, Integer>(value, 1);
         }

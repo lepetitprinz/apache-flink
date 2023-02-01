@@ -1,4 +1,4 @@
-package main.java.dataset;
+package dataset.count;
 
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -8,6 +8,9 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 
 public class WordCountFilter {
+    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
+    private static final String INPUT = DIR + "word/wc.txt";
+
     public static void main(String[] args) throws Exception {
         // Set up the environment
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
@@ -16,8 +19,7 @@ public class WordCountFilter {
 
         env.getConfig().setGlobalJobParameters(params);
 
-        String inputPath = "data/wordCount/wc.txt";
-        DataSet<String> text = env.readTextFile(inputPath);
+        DataSet<String> text = env.readTextFile(INPUT);
 
         DataSet<String> filtered = text.filter(new MyFilter());
 
@@ -31,7 +33,7 @@ public class WordCountFilter {
         }
     }
 
-    public static final class Tokenizer implements MapFunction<String, Tuple2<String, Integer>> {
+    private static final class Tokenizer implements MapFunction<String, Tuple2<String, Integer>> {
         public Tuple2<String, Integer> map(String value) {
             return new Tuple2<>(value, 1);
         }

@@ -1,4 +1,4 @@
-package main.java.dataset;
+package dataset.count;
 
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.common.functions.FlatMapFunction;
@@ -9,7 +9,9 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.util.Collector;
 
 public class WordCountFlatMap {
-
+    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
+    private static final String INPUT = DIR + "word/wcFlat.txt";
+    private static final String OUTPUT = DIR + "output/wcFlatResult.csv";
     public static void main(String[] args) {
         ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
