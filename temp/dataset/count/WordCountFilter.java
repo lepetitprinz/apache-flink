@@ -7,20 +7,15 @@ import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Properties;
-
 public class WordCountFilter {
-    private static final String DIR = System.getProperty("user.dir");
-    private static final String INPUT = DIR + "/data/input/dataset/wc.txt";
-    private static final String OUTPUT = DIR + "/data/output/dataset/wcTokenized.csv";
+    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
+    private static final String INPUT = DIR + "word/wc.txt";
 
     public static void main(String[] args) throws Exception {
-        final ParameterTool params = ParameterTool.fromArgs(args);
-
         // Set up the environment
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
+
+        final ParameterTool params = ParameterTool.fromArgs(args);
 
         env.getConfig().setGlobalJobParameters(params);
 
@@ -29,9 +24,6 @@ public class WordCountFilter {
         DataSet<String> filtered = text.filter(new MyFilter());
 
         DataSet<Tuple2<String, Integer>> tokenized = filtered.map(new Tokenizer());
-
-        // save the result
-        tokenized.writeAsCsv(OUTPUT, "\n", " ");
 
     }
 

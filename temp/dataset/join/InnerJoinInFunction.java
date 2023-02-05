@@ -9,10 +9,10 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 
 public class InnerJoinInFunction {
-    private static final String DIR = System.getProperty("user.dir");
-    private static final String INPUT1 = DIR + "data/input/dataset/person";
-    private static final String INPUT2= DIR + "data/input/dataset/location";
-    private static final String OUTPUT = DIR + "data/output/dataset/inner_join.csv";
+    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
+    private static final String INPUT1 = DIR + "join/person";
+    private static final String INPUT2= DIR + "join/location";
+    private static final String OUTPUT = DIR + "output/innerJoin.csv";
     public static void main(String[] args) throws Exception {
         // Set up the execution environment
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
@@ -31,6 +31,7 @@ public class InnerJoinInFunction {
             });
 
         // Read location data and generate tuples out of each string read
+        String input2 = "data/location";
         DataSet<Tuple2<Integer, String>> locationSet = env.readTextFile(INPUT2)
             .map(new MapFunction<String, Tuple2<Integer, String>>() {
                 public Tuple2<Integer, String> map(String value) throws Exception {
@@ -43,8 +44,14 @@ public class InnerJoinInFunction {
         DataSet<Tuple3<Integer, String, String>> joined = personSet.join(locationSet)
             .where(0)
             .equalTo(0)
-            .with((JoinFunction<Tuple2<Integer, String>, Tuple2<Integer, String>, Tuple3<Integer, String, String>>) (person, location)
-                -> new Tuple3<>(person.f0, person.f1, location.f1));
+            .with(new JoinFunction<Tuple2<Integer, String>, Tuple2<Integer, String>, Tuple3<Integer, String, String>>(){
+                public Tuple3<Integer, String, String> join(
+                    Tuple2<Integer, String> person,
+                    Tuple2<Integer, String> location) {
+
+                    return new Tuple3<Integer, String, String>(person.f0, person.f1, location.f1);
+                }
+            });
 
         joined.writeAsCsv(OUTPUT, "\n", " ");
 

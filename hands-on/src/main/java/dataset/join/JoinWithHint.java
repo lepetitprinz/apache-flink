@@ -10,16 +10,16 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.api.common.operators.base.JoinOperatorBase.JoinHint;
 
 public class JoinWithHint {
-    private static final String RESOURCE = "config/config.properties";
-    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
-    private static final String INPUT1 = "join/person";
-    private static final String INPUT2= DIR + "join/location";
-    private static final String OUTPUT = DIR + "output/innerJoin.csv";
+    private static final String DIR = System.getProperty("user.dir");
+    private static final String INPUT1 = "/data/input/dataset/person";
+    private static final String INPUT2= DIR + "/data/input/dataset/location";
+    private static final String OUTPUT = DIR + "/output/dataset/inner_join.csv";
 
     public static void main(String[] args) throws Exception {
+        final ParameterTool params = ParameterTool.fromArgs(args);
+
         // Set up the execution environment
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
-        final ParameterTool params = ParameterTool.fromArgs(args);
 
         // make parameters available in the web interface
         env.getConfig().setGlobalJobParameters(params);

@@ -9,10 +9,9 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.util.Collector;
 
 public class WordCountFlatMap {
-    private static final String DIR = System.getProperty("user.dir");
-    private static final String INPUT = DIR + "/data/input/dataset/wc.txt";
-    private static final String OUTPUT = DIR + "/data/output/dataset/wcResult.csv";
-
+    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
+    private static final String INPUT = DIR + "word/wcFlat.txt";
+    private static final String OUTPUT = DIR + "output/wcFlatResult.csv";
     public static void main(String[] args) {
         ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 
@@ -20,7 +19,8 @@ public class WordCountFlatMap {
 
         env.getConfig().setGlobalJobParameters(params);
 
-        DataSet<String> text = env.readTextFile(INPUT);
+        String inputPath = "data/wordCount/wcflat.txt";
+        DataSet<String> text = env.readTextFile(inputPath);
         DataSet<String> filtered = text.filter(new WordCountFilter.MyFilter());
         DataSet<Tuple2<String, Integer>> tokenized = filtered.flatMap(new FlatMapTokenizer());
 

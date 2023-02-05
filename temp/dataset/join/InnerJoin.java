@@ -9,13 +9,16 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.utils.ParameterTool;
 
-public class LeftOuterJoin {
+import java.io.FileInputStream;
+import java.io.Reader;
+import java.util.Properties;
 
-    private static final String DIR = System.getProperty("user.dir");
-    private static final String INPUT1 = DIR + "/data/input/dataset/person";
-    private static final String INPUT2= DIR + "/data/input/dataset/location";
-    private static final String OUTPUT = DIR + "/data/output/dataset/left_join.csv";
-
+public class InnerJoin {
+    private static final String RESOURCE = "config/config.properties";
+    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
+    private static final String INPUT1 = "join/person";
+    private static final String INPUT2= DIR + "join/location";
+    private static final String OUTPUT = DIR + "output/innerJoin.csv";
 
     public static void main(String[] args) throws Exception {
         // Set up the execution environment
@@ -25,8 +28,12 @@ public class LeftOuterJoin {
         // make parameters available in the web interface
         env.getConfig().setGlobalJobParameters(params);
 
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(RESOURCE));
+        String dir = properties.getProperty("dir");
+
         // Read people data and generate tuples out of each string read
-        DataSet<Tuple2<Integer, String>> personSet = env.readTextFile(INPUT1)
+        DataSet<Tuple2<Integer, String>> personSet = env.readTextFile(dir + INPUT1)
             .map(new Tokenizer());
 
         // Read location data and generate tuples out of each string read
@@ -34,7 +41,7 @@ public class LeftOuterJoin {
             .map(new Tokenizer());
 
         // Join datasets on person_id
-        DataSet<Tuple3<Integer, String, String>> joined = personSet.leftOuterJoin(locationSet)
+        DataSet<Tuple3<Integer, String, String>> joined = personSet.join(locationSet)
             .where(0)
             .equalTo(0)
             .with(new FinalizeJoinTransform());

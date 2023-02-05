@@ -7,6 +7,6 @@ public final class Tokenizer implements MapFunction<String, Tuple2<Integer, Stri
     public Tuple2<Integer, String> map(String value) {
         String[] words = value.split(",");
 
-        return new Tuple2<>(Integer.parseInt(words[0]), words[1]);
+        return new Tuple2<Integer, String>(Integer.parseInt(words[0]), words[1]);
     }
 }

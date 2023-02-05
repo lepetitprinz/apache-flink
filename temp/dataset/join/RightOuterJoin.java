@@ -2,20 +2,18 @@ package dataset.join;
 
 import dataset.join.util.FinalizeJoinTransform;
 import dataset.join.util.Tokenizer;
-
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.utils.ParameterTool;
 
-public class LeftOuterJoin {
+public class RightOuterJoin {
 
-    private static final String DIR = System.getProperty("user.dir");
-    private static final String INPUT1 = DIR + "/data/input/dataset/person";
-    private static final String INPUT2= DIR + "/data/input/dataset/location";
-    private static final String OUTPUT = DIR + "/data/output/dataset/left_join.csv";
-
+    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
+    private static final String INPUT1 = DIR + "join/person";
+    private static final String INPUT2= DIR + "join/location";
+    private static final String OUTPUT = DIR + "output/rightOuterJoin.csv";
 
     public static void main(String[] args) throws Exception {
         // Set up the execution environment
@@ -34,7 +32,7 @@ public class LeftOuterJoin {
             .map(new Tokenizer());
 
         // Join datasets on person_id
-        DataSet<Tuple3<Integer, String, String>> joined = personSet.leftOuterJoin(locationSet)
+        DataSet<Tuple3<Integer, String, String>> joined = personSet.rightOuterJoin(locationSet)
             .where(0)
             .equalTo(0)
             .with(new FinalizeJoinTransform());

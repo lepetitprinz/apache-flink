@@ -9,15 +9,15 @@ import org.apache.flink.api.java.utils.ParameterTool;
 
 public class WordCount
 {
-    private static final String DIR = System.getProperty("user.dir");
-    private static final String INPUT = DIR + "/data/input/dataset/wc.txt";
-    private static final String OUTPUT = DIR + "/data/output/dataset/wcResult.csv";
+    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
+    private static final String INPUT = DIR + "word/wc.txt";
+    private static final String OUTPUT = DIR + "output/wcResult.csv";
 
     public static void main(String[] args) throws Exception {
-        final ParameterTool params = ParameterTool.fromArgs(args);
-
         // Set up the execution environment
         final ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
+
+        final ParameterTool params = ParameterTool.fromArgs(args);
 
         // Make parameters available in the web interface
         env.getConfig().setGlobalJobParameters(params);

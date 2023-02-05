@@ -9,16 +9,11 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.utils.ParameterTool;
 
-import java.io.FileInputStream;
-import java.io.Reader;
-import java.util.Properties;
-
 public class InnerJoin {
-    private static final String RESOURCE = "config/config.properties";
-    private static final String DIR = "/Users/yjkim-studio/src/flink/hands-on/data/";
-    private static final String INPUT1 = "join/person";
-    private static final String INPUT2= DIR + "join/location";
-    private static final String OUTPUT = DIR + "output/innerJoin.csv";
+    private static final String DIR = System.getProperty("user.dir");
+    private static final String INPUT1 = DIR + "/data/input/dataset/person";
+    private static final String INPUT2= DIR + "/data/input/dataset/location";
+    private static final String OUTPUT = DIR + "/data/output/dataset/inner_join.csv";
 
     public static void main(String[] args) throws Exception {
         // Set up the execution environment
@@ -28,12 +23,8 @@ public class InnerJoin {
         // make parameters available in the web interface
         env.getConfig().setGlobalJobParameters(params);
 
-        Properties properties = new Properties();
-        properties.load(new FileInputStream(RESOURCE));
-        String dir = properties.getProperty("dir");
-
         // Read people data and generate tuples out of each string read
-        DataSet<Tuple2<Integer, String>> personSet = env.readTextFile(dir + INPUT1)
+        DataSet<Tuple2<Integer, String>> personSet = env.readTextFile(INPUT1)
             .map(new Tokenizer());
 
         // Read location data and generate tuples out of each string read
